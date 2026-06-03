@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Get Your AI Chatbot — eMart IT</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0d1b3e;
+  --blue: #1a56a0;
+  --gold: #f59e0b;
+  --white: #ffffff;
+  --success: #10b981;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--navy); color: var(--white); min-height: 100vh; overflow-x: hidden; }
+.bg-mesh { position: fixed; inset: 0; z-index: 0; background: radial-gradient(ellipse 80% 50% at 20% 20%, rgba(26,86,160,0.4) 0%, transparent 60%), radial-gradient(ellipse 60% 40% at 80% 80%, rgba(245,158,11,0.1) 0%, transparent 60%), linear-gradient(135deg, #0d1b3e 0%, #0f2558 50%, #0d1b3e 100%); }
+.bg-grid { position: fixed; inset: 0; z-index: 0; background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 60px 60px; }
+
+/* HEADER — white background so logo is visible */
+header { position: relative; z-index: 10; padding: 20px 40px; display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid #1a56a0; background: #ffffff; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+.logo img { height: 44px; }
+.header-badge { background: #1a56a0; border: none; color: white; padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; letter-spacing: 1px; }
+
+/* HERO */
+.hero { position: relative; z-index: 10; text-align: center; padding: 72px 40px 48px; max-width: 800px; margin: 0 auto; }
+.hero-tag { display: inline-flex; align-items: center; gap: 8px; background: rgba(26,86,160,0.2); border: 1px solid rgba(26,86,160,0.4); padding: 6px 18px; border-radius: 20px; font-size: 12px; font-weight: 600; color: #93c5fd; letter-spacing: 1px; margin-bottom: 24px; text-transform: uppercase; }
+.hero-tag::before { content: ''; width: 8px; height: 8px; background: var(--gold); border-radius: 50%; animation: pulse 2s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.8); } }
+h1 { font-family: 'Playfair Display', serif; font-size: clamp(36px, 6vw, 62px); font-weight: 900; line-height: 1.1; margin-bottom: 20px; background: linear-gradient(135deg, #ffffff 0%, #93c5fd 50%, #f59e0b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.hero-sub { font-size: 18px; color: rgba(255,255,255,0.6); line-height: 1.7; max-width: 560px; margin: 0 auto 40px; font-weight: 300; }
+.trust-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 60px; }
+.trust-pill { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 8px 16px; border-radius: 12px; font-size: 13px; color: rgba(255,255,255,0.75); }
+.trust-pill span { font-size: 16px; }
+
+/* ACCOUNT TYPE */
+.account-selector { position: relative; z-index: 10; max-width: 700px; margin: 0 auto 40px; padding: 0 24px; }
+.account-label { text-align: center; font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+.account-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.account-card { border: 2px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 24px; cursor: pointer; transition: all 0.25s; background: rgba(255,255,255,0.03); position: relative; overflow: hidden; }
+.account-card:hover { border-color: rgba(255,255,255,0.25); background: rgba(255,255,255,0.06); }
+.account-card.selected-trial { border-color: var(--gold); background: rgba(245,158,11,0.08); }
+.account-card.selected-paid { border-color: var(--blue); background: rgba(26,86,160,0.12); }
+.account-card-icon { font-size: 28px; margin-bottom: 10px; }
+.account-card-title { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+.account-card-desc { font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.5; }
+.account-card-badge { position: absolute; top: 12px; right: 12px; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 6px; letter-spacing: 0.5px; }
+.badge-trial { background: rgba(245,158,11,0.2); color: var(--gold); border: 1px solid rgba(245,158,11,0.3); }
+.badge-paid { background: rgba(26,86,160,0.2); color: #93c5fd; border: 1px solid rgba(26,86,160,0.3); }
+
+/* FORM */
+.form-container { position: relative; z-index: 10; max-width: 700px; margin: 0 auto 80px; padding: 0 24px; }
+.form-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; padding: 40px; backdrop-filter: blur(20px); }
+.form-section-title { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; margin-top: 32px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.form-section-title:first-child { margin-top: 0; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-group { margin-bottom: 0; }
+.form-group.full { grid-column: 1 / -1; }
+.form-group label { display: block; font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.5); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+.form-group input, .form-group textarea, .form-group select { width: 100%; padding: 13px 16px; background: rgba(255,255,255,0.06); border: 1.5px solid rgba(255,255,255,0.1); border-radius: 10px; color: white; font-size: 14px; font-family: 'DM Sans', sans-serif; outline: none; transition: all 0.2s; resize: vertical; }
+.form-group input::placeholder, .form-group textarea::placeholder { color: rgba(255,255,255,0.25); }
+.form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: rgba(26,86,160,0.8); background: rgba(26,86,160,0.1); box-shadow: 0 0 0 3px rgba(26,86,160,0.15); }
+.form-group select option { background: #1a2744; color: white; }
+
+/* INFO MODE TOGGLE */
+.info-mode-label { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.5); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+.info-mode-toggle { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+.toggle-btn { flex: 1; min-width: 140px; padding: 11px 14px; border-radius: 10px; border: 1.5px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03); color: rgba(255,255,255,0.5); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: 'DM Sans', sans-serif; text-align: center; position: relative; }
+.toggle-btn:hover { border-color: rgba(255,255,255,0.2); color: white; }
+.toggle-btn.active-upload { border-color: var(--gold); background: rgba(245,158,11,0.1); color: var(--gold); }
+.toggle-btn.active-website { border-color: var(--blue); background: rgba(26,86,160,0.15); color: #93c5fd; }
+.toggle-btn.active-manual { border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.07); color: white; }
+.toggle-btn .recommended-tag { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: var(--gold); color: #1a1a2e; font-size: 9px; font-weight: 800; padding: 2px 8px; border-radius: 10px; letter-spacing: 0.5px; white-space: nowrap; text-transform: uppercase; }
+
+/* RECOMMENDED BANNER */
+.upload-recommend-banner {
+  background: linear-gradient(135deg, rgba(245,158,11,0.12), rgba(245,158,11,0.06));
+  border: 1px solid rgba(245,158,11,0.3);
+  border-radius: 12px; padding: 14px 18px;
+  display: flex; align-items: flex-start; gap: 12px;
+  margin-bottom: 18px;
+}
+.upload-recommend-banner .icon { font-size: 22px; flex-shrink: 0; margin-top: 1px; }
+.upload-recommend-banner .text { font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.6; }
+.upload-recommend-banner .text strong { color: var(--gold); }
+
+/* FILE UPLOAD ZONE */
+.file-upload-zone { border: 2px dashed rgba(245,158,11,0.3); border-radius: 12px; padding: 32px 24px; text-align: center; cursor: pointer; transition: all 0.25s; background: rgba(245,158,11,0.03); position: relative; }
+.file-upload-zone:hover, .file-upload-zone.dragover { border-color: var(--gold); background: rgba(245,158,11,0.08); }
+.file-upload-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.upload-icon { font-size: 40px; margin-bottom: 12px; }
+.upload-title { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+.upload-sub { font-size: 12px; color: rgba(255,255,255,0.4); line-height: 1.6; }
+.upload-types { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 14px; }
+.upload-type-badge { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.5); }
+.upload-type-badge.limit { background: rgba(245,158,11,0.1); border-color: rgba(245,158,11,0.2); color: var(--gold); }
+
+.file-selected { display: none; margin-top: 16px; background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); border-radius: 10px; padding: 12px 16px; align-items: center; gap: 12px; }
+.file-selected.show { display: flex; }
+.file-selected-icon { font-size: 24px; flex-shrink: 0; }
+.file-selected-info { flex: 1; }
+.file-selected-name { font-size: 13px; font-weight: 600; color: #6ee7b7; }
+.file-selected-size { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 2px; }
+.file-remove { background: rgba(239,68,68,0.15); border: none; color: #fca5a5; padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; font-family: 'DM Sans', sans-serif; font-weight: 600; }
+
+.upload-progress { display: none; margin-top: 12px; }
+.upload-progress.show { display: block; }
+.progress-bar { height: 4px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--blue), var(--gold)); border-radius: 4px; width: 0%; transition: width 0.3s; }
+.progress-label { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 6px; }
+
+/* SUBMIT */
+.submit-btn { width: 100%; padding: 18px; background: linear-gradient(135deg, var(--blue), #2e75c8); border: none; border-radius: 12px; color: white; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.25s; font-family: 'DM Sans', sans-serif; margin-top: 28px; position: relative; overflow: hidden; letter-spacing: 0.3px; }
+.submit-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(26,86,160,0.4); }
+.submit-btn:active { transform: translateY(0); }
+.submit-btn.loading { pointer-events: none; opacity: 0.7; }
+.submit-btn.loading::after { content: ''; position: absolute; right: 20px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: translateY(-50%) rotate(360deg); } }
+.form-disclaimer { text-align: center; font-size: 12px; color: rgba(255,255,255,0.3); margin-top: 16px; line-height: 1.6; }
+
+/* SUCCESS */
+.success-overlay { display: none; position: fixed; inset: 0; z-index: 200; background: rgba(13,27,62,0.97); align-items: center; justify-content: center; flex-direction: column; text-align: center; padding: 40px; }
+.success-overlay.show { display: flex; }
+.success-icon { width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #10b981, #059669); display: flex; align-items: center; justify-content: center; font-size: 36px; margin-bottom: 28px; box-shadow: 0 0 60px rgba(16,185,129,0.4); animation: pop 0.5s cubic-bezier(0.175,0.885,0.32,1.275); }
+@keyframes pop { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.success-title { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 900; margin-bottom: 16px; background: linear-gradient(135deg, #ffffff, #93c5fd); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.success-sub { font-size: 16px; color: rgba(255,255,255,0.6); max-width: 480px; line-height: 1.7; margin-bottom: 32px; }
+.success-steps { display: flex; flex-direction: column; gap: 12px; max-width: 400px; text-align: left; }
+.success-step { display: flex; align-items: center; gap: 14px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); padding: 14px 18px; border-radius: 12px; font-size: 14px; color: rgba(255,255,255,0.8); }
+.step-num { width: 28px; height: 28px; border-radius: 50%; background: var(--blue); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+
+.error-msg { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; padding: 12px 16px; border-radius: 10px; font-size: 13px; margin-top: 16px; display: none; }
+
+@media (max-width: 600px) {
+  header { padding: 16px 20px; }
+  .hero { padding: 48px 20px 32px; }
+  .account-cards { grid-template-columns: 1fr; }
+  .form-card { padding: 24px 20px; }
+  .form-grid { grid-template-columns: 1fr; }
+  .form-group.full { grid-column: 1; }
+  .info-mode-toggle { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+<div class="bg-mesh"></div>
+<div class="bg-grid"></div>
+
+<!-- SUCCESS -->
+<div class="success-overlay" id="success-overlay">
+  <div class="success-icon">✓</div>
+  <div class="success-title">Request Received!</div>
+  <div class="success-sub">Thank you! Our team will review your request and set up your AI chatbot within 24 hours. Check your email for next steps.</div>
+  <div class="success-steps">
+    <div class="success-step"><div class="step-num">1</div>We review your request (within a few hours)</div>
+    <div class="success-step"><div class="step-num">2</div>We set up and train your AI chatbot</div>
+    <div class="success-step"><div class="step-num">3</div>You receive your login details by email</div>
+    <div class="success-step"><div class="step-num">4</div>Install one line of code — you're live!</div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <img src="https://assets.cdn.filesafe.space/gc3cLEwwg5coVvb6yiOD/media/6a0d91c507a34aa07f7ae15e.png" alt="eMart IT">
+  </div>
+  <div class="header-badge">AI CHATBOT PLATFORM</div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag">Get Started Today</div>
+  <h1>Your AI Chatbot,<br>Live in 24 Hours</h1>
+  <p class="hero-sub">Tell us about your business and we'll set up a fully trained AI chatbot — customized to your brand, answering your customers 24/7.</p>
+  <div class="trust-row">
+    <div class="trust-pill"><span>🎯</span> 3-Day Free Trial</div>
+    <div class="trust-pill"><span>💳</span> No Credit Card Required</div>
+    <div class="trust-pill"><span>⚡</span> Live in 24 Hours</div>
+    <div class="trust-pill"><span>🔧</span> We Set Everything Up</div>
+  </div>
+</div>
+
+<!-- ACCOUNT TYPE -->
+<div class="account-selector">
+  <div class="account-label">Choose your plan</div>
+  <div class="account-cards">
+    <div class="account-card selected-trial" id="card-trial" onclick="selectType('trial')">
+      <div class="account-card-badge badge-trial">FREE</div>
+      <div class="account-card-icon">🎯</div>
+      <div class="account-card-title">Free Trial</div>
+      <div class="account-card-desc">3 days · 10 conversations · No credit card needed. Perfect to see your chatbot in action.</div>
+    </div>
+    <div class="account-card" id="card-paid" onclick="selectType('paid')">
+      <div class="account-card-badge badge-paid">PAID</div>
+      <div class="account-card-icon">💳</div>
+      <div class="account-card-title">Paid Account</div>
+      <div class="account-card-desc">Full access from day one. Setup fee + pay per conversation. Best for serious businesses.</div>
+    </div>
+  </div>
+</div>
+
+<!-- FORM -->
+<div class="form-container">
+  <div class="form-card">
+
+    <div class="form-section-title">👤 Your Contact Info</div>
+    <div class="form-grid">
+      <div class="form-group"><label>Your Name *</label><input type="text" id="f-name" placeholder="e.g. John Smith"></div>
+      <div class="form-group"><label>Email Address *</label><input type="email" id="f-email" placeholder="john@yourbusiness.com"></div>
+      <div class="form-group"><label>Phone Number *</label><input type="tel" id="f-phone" placeholder="e.g. +880 1234 567890"></div>
+      <div class="form-group"><label>Your Location *</label><input type="text" id="f-location" placeholder="e.g. Dhaka, Bangladesh"></div>
+    </div>
+
+    <div class="form-section-title">🏢 Your Business Info</div>
+    <div class="form-grid">
+      <div class="form-group"><label>Business Name *</label><input type="text" id="f-business" placeholder="e.g. Glamour Hair Salon"></div>
+      <div class="form-group">
+        <label>Business Type *</label>
+        <select id="f-type">
+          <option value="">— Select type —</option>
+          <option value="Hair Salon">Hair Salon</option>
+          <option value="Doctor / Clinic">Doctor / Clinic</option>
+          <option value="Dental Clinic">Dental Clinic</option>
+          <option value="Restaurant / Cafe">Restaurant / Cafe</option>
+          <option value="Retail Shop">Retail Shop</option>
+          <option value="Real Estate">Real Estate</option>
+          <option value="Lawyer / Law Firm">Lawyer / Law Firm</option>
+          <option value="Gym / Fitness">Gym / Fitness</option>
+          <option value="Marketing Agency">Marketing Agency</option>
+          <option value="E-Commerce">E-Commerce</option>
+          <option value="Education">Education</option>
+          <option value="Travel / Tourism">Travel / Tourism</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Working Hours</label><input type="text" id="f-hours" placeholder="e.g. Mon-Sat 9am-6pm"></div>
+      <div class="form-group"><label>Price Range (optional)</label><input type="text" id="f-price" placeholder="e.g. Services from $20"></div>
+    </div>
+
+    <div class="form-section-title">📋 Business Details for AI Training</div>
+
+    <!-- RECOMMENDED BANNER — always visible -->
+    <div class="upload-recommend-banner">
+      <div class="icon">💡</div>
+      <div class="text">
+        <strong>Tip: Upload a document for the best results.</strong> A PDF or Word file with your services, prices, hours, and policies gives our team everything needed to train your AI chatbot perfectly — no back-and-forth needed.
+      </div>
+    </div>
+
+    <div class="info-mode-label">How would you like to share your business details?</div>
+    <div class="info-mode-toggle">
+      <button class="toggle-btn active-upload" id="btn-upload" onclick="setInfoMode('upload')">
+        <span class="recommended-tag">⭐ Recommended</span>
+        📄 Upload a Document
+      </button>
+      <button class="toggle-btn" id="btn-website" onclick="setInfoMode('website')">
+        🌐 I Have a Website
+      </button>
+      <button class="toggle-btn" id="btn-manual" onclick="setInfoMode('manual')">
+        ✏️ Enter Manually
+      </button>
+    </div>
+
+    <!-- UPLOAD MODE — default -->
+    <div id="upload-section">
+      <div class="file-upload-zone" id="upload-zone" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+        <input type="file" id="f-file" accept=".pdf,.doc,.docx,.txt" onchange="handleFileSelect(this)">
+        <div class="upload-icon">📤</div>
+        <div class="upload-title">Drop your file here or click to browse</div>
+        <div class="upload-sub">Upload your business profile, service menu, price list, or any document<br>that describes your business. We'll read it and train your chatbot from it.</div>
+        <div class="upload-types">
+          <span class="upload-type-badge">PDF</span>
+          <span class="upload-type-badge">DOC</span>
+          <span class="upload-type-badge">DOCX</span>
+          <span class="upload-type-badge">TXT</span>
+          <span class="upload-type-badge limit">Max 5MB</span>
+        </div>
+      </div>
+      <div class="file-selected" id="file-selected-info">
+        <div class="file-selected-icon" id="file-icon">📄</div>
+        <div class="file-selected-info">
+          <div class="file-selected-name" id="file-name-display">—</div>
+          <div class="file-selected-size" id="file-size-display">—</div>
+        </div>
+        <button class="file-remove" onclick="removeFile()">✕ Remove</button>
+      </div>
+      <div class="upload-progress" id="upload-progress">
+        <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+        <div class="progress-label" id="progress-label">Uploading...</div>
+      </div>
+      <p style="font-size:12px;color:rgba(255,255,255,0.3);margin-top:10px;line-height:1.6">
+        📌 Don't have a document ready? You can also take a screenshot of your price list or menu, save it as PDF, and upload that. Or switch to one of the other options above.
+      </p>
+    </div>
+
+    <!-- WEBSITE MODE -->
+    <div id="website-section" style="display:none">
+      <div class="form-group full">
+        <label>Website URL</label>
+        <input type="text" id="f-website" placeholder="e.g. https://myglamoursalon.com">
+      </div>
+      <p style="font-size:12px;color:rgba(255,255,255,0.35);margin-top:8px;line-height:1.6">We'll visit your website and extract all the information needed to train your AI chatbot — services, hours, prices, and more.</p>
+    </div>
+
+    <!-- MANUAL MODE -->
+    <div id="manual-section" style="display:none">
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>Services Offered *</label>
+          <textarea id="f-services" rows="3" placeholder="List your main services and prices. e.g. Haircut $15, Coloring $45, Hair Spa $60"></textarea>
+        </div>
+        <div class="form-group full">
+          <label>Business Description *</label>
+          <textarea id="f-desc" rows="3" placeholder="2-3 sentences about your business. e.g. We are a premium hair salon in Dhaka serving clients since 2015..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section-title">💬 Additional Info</div>
+    <div class="form-group full">
+      <label>Special Instructions (optional)</label>
+      <textarea id="f-instructions" rows="3" placeholder="Any specific things you want the chatbot to do? e.g. Always recommend booking an appointment. Never discuss competitor prices."></textarea>
+    </div>
+
+    <div class="error-msg" id="error-msg"></div>
+
+    <button class="submit-btn" id="submit-btn" onclick="submitForm()">
+      🚀 Submit My Request
+    </button>
+
+    <p class="form-disclaimer">
+      By submitting this form you agree to our Terms of Service and Privacy Policy.<br>
+      We will contact you within 24 hours. No spam, ever.
+    </p>
+
+  </div>
+</div>
+
+<script>
+const GHL_WEBHOOK = "https://services.leadconnectorhq.com/hooks/gc3cLEwwg5coVvb6yiOD/webhook-trigger/c9e9fb53-3fad-481e-99d3-b64de46b36ef";
+const BACKEND = "https://web-production-1c820.up.railway.app";
+
+let selectedType = "trial";
+let infoMode = "upload";
+let selectedFile = null;
+let uploadedDocUrl = "";
+
+function selectType(type) {
+  selectedType = type;
+  document.getElementById("card-trial").className = "account-card" + (type === "trial" ? " selected-trial" : "");
+  document.getElementById("card-paid").className = "account-card" + (type === "paid" ? " selected-paid" : "");
+}
+
+function setInfoMode(mode) {
+  infoMode = mode;
+  // Reset all buttons
+  document.getElementById("btn-upload").className = "toggle-btn" + (mode === "upload" ? " active-upload" : "");
+  document.getElementById("btn-website").className = "toggle-btn" + (mode === "website" ? " active-website" : "");
+  document.getElementById("btn-manual").className = "toggle-btn" + (mode === "manual" ? " active-manual" : "");
+  // Show correct section
+  document.getElementById("upload-section").style.display = mode === "upload" ? "block" : "none";
+  document.getElementById("website-section").style.display = mode === "website" ? "block" : "none";
+  document.getElementById("manual-section").style.display = mode === "manual" ? "block" : "none";
+}
+
+function handleDragOver(e) {
+  e.preventDefault();
+  document.getElementById("upload-zone").classList.add("dragover");
+}
+
+function handleDragLeave(e) {
+  document.getElementById("upload-zone").classList.remove("dragover");
+}
+
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById("upload-zone").classList.remove("dragover");
+  const file = e.dataTransfer.files[0];
+  if (file) processFile(file);
+}
+
+function handleFileSelect(input) {
+  const file = input.files[0];
+  if (file) processFile(file);
+}
+
+function processFile(file) {
+  const allowedExt = [".pdf", ".doc", ".docx", ".txt"];
+  const ext = "." + file.name.split(".").pop().toLowerCase();
+  if (!allowedExt.includes(ext)) {
+    showError("❌ File type not supported. Please upload PDF, DOC, DOCX, or TXT only.");
+    return;
+  }
+  if (file.size > 5 * 1024 * 1024) {
+    showError("❌ File is too large. Maximum size is 5MB.");
+    return;
+  }
+  selectedFile = file;
+  uploadedDocUrl = "";
+  const icons = { ".pdf": "📕", ".doc": "📘", ".docx": "📘", ".txt": "📄" };
+  document.getElementById("file-icon").textContent = icons[ext] || "📄";
+  document.getElementById("file-name-display").textContent = file.name;
+  document.getElementById("file-size-display").textContent = (file.size / 1024).toFixed(1) + " KB · Ready to upload";
+  document.getElementById("file-selected-info").classList.add("show");
+  document.getElementById("error-msg").style.display = "none";
+}
+
+function removeFile() {
+  selectedFile = null;
+  uploadedDocUrl = "";
+  document.getElementById("f-file").value = "";
+  document.getElementById("file-selected-info").classList.remove("show");
+  document.getElementById("upload-progress").classList.remove("show");
+}
+
+function showError(msg) {
+  const el = document.getElementById("error-msg");
+  el.textContent = msg;
+  el.style.display = "block";
+  el.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+async function uploadFile(email) {
+  if (!selectedFile) return "";
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = async function(e) {
+      try {
+        document.getElementById("upload-progress").classList.add("show");
+        document.getElementById("progress-fill").style.width = "40%";
+        document.getElementById("progress-label").textContent = "Uploading your document...";
+        const res = await fetch(BACKEND + "/requests/upload-doc", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            file_data: e.target.result,
+            file_name: selectedFile.name,
+            content_type: selectedFile.type || "application/octet-stream",
+            email: email
+          })
+        });
+        document.getElementById("progress-fill").style.width = "100%";
+        document.getElementById("progress-label").textContent = "✅ Document uploaded successfully!";
+        const data = await res.json();
+        resolve(data.success ? data.url : "");
+      } catch(err) {
+        document.getElementById("progress-label").textContent = "⚠️ Upload failed — continuing without document";
+        resolve("");
+      }
+    };
+    reader.readAsDataURL(selectedFile);
+  });
+}
+
+async function submitForm() {
+  document.getElementById("error-msg").style.display = "none";
+  const name = document.getElementById("f-name").value.trim();
+  const email = document.getElementById("f-email").value.trim();
+  const phone = document.getElementById("f-phone").value.trim();
+  const location = document.getElementById("f-location").value.trim();
+  const business = document.getElementById("f-business").value.trim();
+  const type = document.getElementById("f-type").value;
+  const hours = document.getElementById("f-hours").value.trim();
+  const price = document.getElementById("f-price").value.trim();
+  const website = document.getElementById("f-website").value.trim();
+  const services = document.getElementById("f-services").value.trim();
+  const desc = document.getElementById("f-desc").value.trim();
+  const instructions = document.getElementById("f-instructions").value.trim();
+
+  if (!name || !email || !phone || !business || !type || !location) {
+    showError("⚠️ Please fill in all required fields marked with *.");
+    return;
+  }
+  if (infoMode === "manual" && (!services || !desc)) {
+    showError("⚠️ Please fill in your Services and Business Description.");
+    return;
+  }
+  if (infoMode === "upload" && !selectedFile) {
+    showError("⚠️ Please upload your business document, or switch to another option above.");
+    return;
+  }
+
+  const btn = document.getElementById("submit-btn");
+  btn.classList.add("loading");
+  btn.textContent = "Submitting your request...";
+
+  let docUrl = "";
+  if (infoMode === "upload" && selectedFile) {
+    docUrl = await uploadFile(email);
+  }
+
+  const payload = {
+    name, email, phone, location,
+    business_name: business,
+    business_type: type,
+    working_hours: hours,
+    price_range: price,
+    website: infoMode === "website" ? website : "",
+    services: infoMode === "manual" ? services : "",
+    description: infoMode === "manual" ? desc : "",
+    special_instructions: instructions,
+    request_type: selectedType,
+    info_mode: infoMode,
+    document_url: docUrl,
+    submitted_at: new Date().toISOString(),
+    source: "public_form"
+  };
+
+  let ghlSuccess = false;
+  let backendSuccess = false;
+
+  try {
+    await fetch(GHL_WEBHOOK, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload), mode: "no-cors"
+    });
+    ghlSuccess = true;
+  } catch(e) { console.log("GHL:", e); }
+
+  try {
+    const res = await fetch(BACKEND + "/requests/incoming", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    if (res.ok) backendSuccess = true;
+  } catch(e) { console.log("Backend:", e); }
+
+  btn.classList.remove("loading");
+
+  if (ghlSuccess || backendSuccess) {
+    document.getElementById("success-overlay").classList.add("show");
+  } else {
+    showError("⚠️ Something went wrong. Please try again or contact us directly at emartit.com");
+    btn.textContent = "🚀 Submit My Request";
+  }
+}
+</script>
+</body>
+</html>
