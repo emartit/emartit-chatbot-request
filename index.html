@@ -266,6 +266,13 @@ button.chap-i:hover{background:rgba(255,255,255,.09);border-color:rgba(255,255,2
 .td-panel .vp-top{flex-shrink:0}
 .td-log{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding:4px 2px 10px;scrollbar-width:thin}
 .td-log .cmsg{opacity:1;transform:none;white-space:pre-wrap;word-wrap:break-word;max-width:85%}
+.td-log .cmsg.them.fmt{white-space:normal;line-height:1.5}
+.td-log .fmt p{margin:0 0 7px}.td-log .fmt p:last-child{margin-bottom:0}
+.td-log .fmt ul,.td-log .fmt ol{margin:3px 0 7px 18px;padding:0}
+.td-log .fmt ul:last-child,.td-log .fmt ol:last-child{margin-bottom:0}
+.td-log .fmt li{margin:2px 0}.td-log .fmt strong{color:#fff;font-weight:700}
+.td-log .fmt a{color:#9FC5FF;text-decoration:underline;word-break:break-word}
+.td-log{position:relative}
 .td-log .cmsg.us{align-self:flex-end}
 .td-log .cmsg.them{align-self:flex-start}
 .td-log .typing{align-self:flex-start;opacity:1}
@@ -1729,6 +1736,39 @@ document.querySelectorAll('.faq-q').forEach(function(q){
   });
 })();
 
+
+// ============ CHAT REPLY FORMATTING (safe: escapes everything first) ============
+function fmtEsc(s) {
+  return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function fmtInline(s) {
+  let h = fmtEsc(s);
+  h = h.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+  h = h.replace(/__(.+?)__/g, "<strong>$1</strong>");
+  h = h.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+  h = h.replace(/(^|[\s(])(https?:\/\/[^\s<]+[^\s<.,!?;:)])/g, '$1<a href="$2" target="_blank" rel="noopener">$2</a>');
+  h = h.replace(/(^|[\s(])([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,})/g, '$1<a href="mailto:$2">$2</a>');
+  return h;
+}
+function fmtReply(text) {
+  const lines = String(text == null ? "" : text).replace(/\r/g, "").split("\n");
+  let html = "", para = [], list = null;
+  const flushPara = () => { if (para.length) { html += "<p>" + para.join("<br>") + "</p>"; para = []; } };
+  const flushList = () => { if (list) { html += "<" + list.type + ">" + list.items.map(i => "<li>" + i + "</li>").join("") + "</" + list.type + ">"; list = null; } };
+  for (const raw of lines) {
+    const line = raw.trim();
+    let m;
+    if (!line) { flushPara(); flushList(); continue; }
+    if (/^(-{3,}|\*{3,}|_{3,})$/.test(line)) { flushPara(); flushList(); continue; }
+    if ((m = line.match(/^#{1,6}\s+(.*)$/))) { flushPara(); flushList(); html += "<p><strong>" + fmtInline(m[1].replace(/\*\*/g, "")) + "</strong></p>"; continue; }
+    if ((m = line.match(/^[-•*✅📌]\s+(.*)$/))) { flushPara(); if (!list || list.type !== "ul") { flushList(); list = { type: "ul", items: [] }; } list.items.push(fmtInline(m[1])); continue; }
+    if ((m = line.match(/^\d+[.)]\s+(.*)$/))) { flushPara(); if (!list || list.type !== "ol") { flushList(); list = { type: "ol", items: [] }; } list.items.push(fmtInline(m[1])); continue; }
+    flushList(); para.push(fmtInline(line));
+  }
+  flushPara(); flushList();
+  return html || "<p></p>";
+}
+
 /* ---------- live demo ---------- */
 (function(){
   var MAX=EMARTIT.DEMO_MAX;
@@ -1762,7 +1802,13 @@ document.querySelectorAll('.faq-q').forEach(function(q){
     b.onclick=function(){ $('tdEmail').value=fixed; $('tdEmail').classList.remove('bad'); err.textContent=''; };
     err.appendChild(b); err.appendChild(document.createTextNode('?'));
   }
-  function bubble(text,who){ var d=document.createElement('div'); d.className='cmsg in '+who; d.textContent=text; log.appendChild(d); log.scrollTop=log.scrollHeight; }
+  function bubble(text,who){
+    var d=document.createElement('div'); d.className='cmsg in '+who;
+    if(who==='them'){ d.className+=' fmt'; d.innerHTML=fmtReply(text); } else { d.textContent=text; }
+    log.appendChild(d);
+    /* long reply: show it from its first line; otherwise scroll to the bottom */
+    if(who==='them' && d.offsetHeight>log.clientHeight-20) log.scrollTop=d.offsetTop-10; else log.scrollTop=log.scrollHeight;
+  }
   function typing(){ var t=document.createElement('div'); t.className='typing in'; t.innerHTML='<i></i><i></i><i></i>'; log.appendChild(t); log.scrollTop=log.scrollHeight; return t; }
   function used(){ return history.filter(function(m){ return m.role==='user'; }).length; }
   function setMeter(n){ meter.hidden=false; left.textContent=n+' of '+MAX+' demo messages left'; }
